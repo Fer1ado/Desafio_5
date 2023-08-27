@@ -1,0 +1,41 @@
+body{
+    font-family: "Helvetica Neue",Helvetica;
+    background-color: bisque;
+
+}
+
+h1{
+    text-align: center;
+}
+
+form{
+    display:flex;
+    flex-direction: column;
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid black;
+}
+
+label, input{
+    display: block;
+    margin-bottom: 10px;
+    width: 100%;
+    padding: 8px;
+   
+}
+
+input{
+    width: 100%;
+    padding: 8px;
+    border: 1px, solid black;
+}
+
+button{
+    background-color: rgb(51, 69, 69);
+    color: rgb(247, 236, 236);
+    padding: 10px 20px;
+    border: none;
+    border-radius: 3pz;
+    cursor:auto;
+}

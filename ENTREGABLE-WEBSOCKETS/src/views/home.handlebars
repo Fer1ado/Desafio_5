@@ -1,0 +1,13 @@
+<h1> hola soy {{user.nombre}}</h1>
+{{>components/contador}}
+
+{{#if esTutor}}
+{{#each cursos}}
+<div>
+ <p>{{this.numCurso}}{{this.dia}}{{this.tipo}}</p>
+</div>
+{{/each}}
+<p>Sos Tutor</p>
+{{else}}
+<p>No sos tutor</p>
+{{/if}}
