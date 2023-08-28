@@ -1,20 +1,41 @@
-const socket = io()
+const socket = io();
 const form = document.getElementById("idForm");
-const botonProd = document.getElementById("botonProductos");
+const listarProd = document.getElementById("listarProd");
 
-form.addEventListener("submit", (e) => {
+form.addEventListener("submit", async (e) => {
   e.preventDefault();
   console.log(e.target);
-  const datForm = new FormData(e.target)
-  console.log(datForm.get("title"))
-  const prod= Object.fromEntries(datForm)
-  console.log(prod)
-  socket.emit("NuevoProducto", prod)
-  e.target.reset()
+  const datForm = new FormData(e.target);
+  const prod = Object.fromEntries(datForm);
+  console.log(prod);
+  await socket.emit("nuevoProducto", prod);
 });
 
-botonProd.addEventListener("click", () => {
-    socket.on("prods", (productos) =>{
-        console.log(productos)
-    })
-}) 
+listarProd.addEventListener("click", async (e) => {
+  e.preventDefault();
+  await socket.emit("update-products");
+
+  socket.on("product-data", (mensaje) => {
+    const tableBody = document.querySelector("#productsTable tbody");
+    let tableContent = "";
+    if (mensaje && Array.isArray(mensaje)) {
+      mensaje.forEach((product) => {
+        tableContent += `
+                <tr>
+                    <td>${product.id}</td>
+                    <td>${product.title}</td>
+                    <td>${product.description}</td>
+                    <td>${product.price}</td>
+                    <td>${product.thumbnail}</td>
+                    <td>${product.code}</td>
+                    <td>${product.stock}</td>
+                    <td>${product.status}</td>
+                </tr>
+            `;
+      });
+    } else {
+      console.error("Productos no definidos o no es un array:", mensaje);
+    }
+    tableBody.innerHTML = tableContent;
+  });
+});
