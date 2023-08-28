@@ -1,5 +1,11 @@
+import { promises as fs } from "fs";
+import { _dirname } from "../path.js"
+
+const ruta = `${_dirname}/Json/products.json`
+
 export default class Product{
-    constructor(title, description, price, thumbnail, code, stock,status){
+
+    constructor(title, description, price, thumbnail, code, stock,status,id){
         this.title = title
         this.description = description
         this.price = price
@@ -7,18 +13,9 @@ export default class Product{
         this.code = code
         this.stock = stock
         this.status= status
-        this.id = Product.agregarId()
-
+        this.id = id
     }
 
-    static agregarId(){
-        if(this.incrementoId){
-            this.incrementoId++
-        } 
-        else{
-            this.incrementoId = 1
-        }
-        return this.incrementoId
-    }
-    
 }
+
+  

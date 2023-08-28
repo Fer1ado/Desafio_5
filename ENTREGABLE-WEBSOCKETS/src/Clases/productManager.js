@@ -1,52 +1,48 @@
 import { promises as fs } from "fs";
 import { _dirname } from "../path.js"
+import Product from "./Productos.js";
 
 const ruta = `${_dirname}/Json/products.json`;
+
 
 export default class ProductManager {
   constructor() {
     this.products = [];
-  }
-
-  async addProduct(input) {
-    //chequeo si todos los campos estan completos para agregar el producto
-    const check = Object.values(input).some(
-      (valor) => valor === undefined || valor === "" || valor === null
-    );
-    //transformo a objeto el archivo json para chequear por duplicados
-    const producto = JSON.parse(await fs.readFile(ruta, "utf-8"));
-    //chequeo si el producto no esta repetido
-    const prod = producto.some((prod) => prod.code === input.code);
-
-    if (check) {
-      return "Producto Incompleto, todos los campos deben tener información";
-    }
-
-    if (prod) {
-      return "Producto repetido";
-    } else {
-      this.products.push(input);
-      await fs.writeFile(ruta, JSON.stringify(this.products));
-      console.log("Producto agregado con éxito!");
-      return "Producto agregado con éxito!";
-    }
+    this.currentId = 0
   }
 
   async getProducts() {
     const producto = JSON.parse(await fs.readFile(ruta, "utf-8"));
     return producto;
   }
-
-  async getProductById(id) {
+  
+  async addProduct(input) {
+    //chequeo si todos los campos estan completos para agregar el producto
+    const check = Object.values(input).some(
+      (valor) => valor === undefined || valor === "" || valor === null );
+    //transformo a objeto el archivo json para chequear por duplicados
     const producto = JSON.parse(await fs.readFile(ruta, "utf-8"));
-    const produ = producto.find((prod) => prod.id === id);
-    console.log(produ);
-    if (produ) {
-      return produ;
+    //chequeo si el producto no esta repetido
+    const prod = producto.some((prod) => prod.code === input.code);
+
+    if (check) {
+      console.log("Producto Incompleto, todos los campos deben tener información")
+      return "Producto Incompleto, todos los campos deben tener información";
+    }
+
+    if (prod) {
+      console.log("Producto repetido")
+      return "Producto repetido";
     } else {
-      return "Producto no encontrado";
+      let newId = Math.floor(Math.random() * 100000) + 1; // cambie el metodo de agregar ID tengo que mejorarlo pero por ahorea funciona
+      const product = new Product(input.title, input.description, input.price, input.thumbnail, input.code, input.stock, true, newId)
+      this.products.push(...producto, product);
+      await fs.writeFile(ruta, JSON.stringify(this.products));
+      console.log("Producto agregado con éxito!");
+      return "Producto agregado con éxito!";
     }
   }
+
 
   async updateProduct(id, edicion) {
     //transformo a objeto la base de datos
